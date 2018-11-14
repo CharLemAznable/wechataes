@@ -1,1 +1,3 @@
-# wechataes
+# Wechat AES
+
+  提供接收和推送给微信公众平台消息的加解密接口
