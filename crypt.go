@@ -4,6 +4,8 @@ import (
     "crypto/aes"
     "crypto/cipher"
     "encoding/base64"
+    "encoding/xml"
+    "fmt"
     mathRand "math/rand"
     "time"
 )
@@ -38,6 +40,51 @@ func WechatCryptorRandomStr() string {
         result = append(result, bytes[r.Intn(len(bytes))])
     }
     return string(result)
+}
+
+const WechatCryptorEncryptMsgFormat = `
+<xml>
+<Encrypt><![CDATA[%s]]></Encrypt>
+<MsgSignature><![CDATA[%s]]></MsgSignature>
+<TimeStamp>%s</TimeStamp>
+<Nonce><![CDATA[%s]]></Nonce>
+</xml>
+`
+
+func (cryptor *WechatCryptor) EncryptMsg(msg, timeStamp, nonce string) (string, error) {
+    encrypt, err := cryptor.Encrypt(WechatCryptorRandomStr(), msg)
+    if nil != err {
+        return "", err
+    }
+
+    if 0 == len(timeStamp) {
+        timeStamp = string(time.Now().Unix())
+    }
+
+    sign := SHA1(cryptor.token, timeStamp, nonce, encrypt)
+    return fmt.Sprintf(WechatCryptorEncryptMsgFormat, encrypt, sign, timeStamp, nonce), nil
+}
+
+type WechatCryptorPostBody struct {
+    XMLName    xml.Name `xml:"xml"`
+    ToUserName string   `xml:"ToUserName"`
+    AppId      string   `xml:"AppId"`
+    Encrypt    string   `xml:"Encrypt"`
+}
+
+func (cryptor *WechatCryptor) DecryptMsg(msgSign, timeStamp, nonce, postData string) (string, error) {
+    postBody := WechatCryptorPostBody{}
+    err := xml.Unmarshal([]byte(postData), &postBody)
+    if nil != err || 0 == len(postBody.Encrypt) {
+        return "", &WechatCryptorError{Code: ParseXmlError}
+    }
+
+    sign := SHA1(cryptor.token, timeStamp, nonce, postBody.Encrypt)
+    if msgSign != sign {
+        return "", &WechatCryptorError{Code: ValidateSignatureError}
+    }
+
+    return cryptor.Decrypt(postBody.Encrypt)
 }
 
 // 对明文进行加密
