@@ -34,7 +34,7 @@ func NewWechatCryptor(appId, token, encodingAesKey string) (*WechatCryptor, erro
 func (cryptor *WechatCryptor) String() string {
     return "AppId(" + cryptor.appId +
         ") Token(" + cryptor.token +
-        ") AES_KEY(" + base64.StdEncoding.EncodeToString(cryptor.aesKey) +")"
+        ") AES_KEY(" + base64.StdEncoding.EncodeToString(cryptor.aesKey) + ")"
 }
 
 // 随机生成16位字符串
