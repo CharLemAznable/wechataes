@@ -58,16 +58,10 @@ const WechatCryptorEncryptMsgFormat = `
 `
 
 func (cryptor *WechatCryptor) EncryptMsg(msg, timeStamp, nonce string) (string, error) {
-    encrypt, err := cryptor.Encrypt(WechatCryptorRandomStr(), msg)
+    encrypt, sign, timeStamp, nonce, err := cryptor.EncryptMsgContent(msg, timeStamp, nonce)
     if nil != err {
         return "", err
     }
-
-    if 0 == len(timeStamp) {
-        timeStamp = string(time.Now().Unix())
-    }
-
-    sign := SHA1(cryptor.token, timeStamp, nonce, encrypt)
     return fmt.Sprintf(WechatCryptorEncryptMsgFormat, encrypt, sign, timeStamp, nonce), nil
 }
 
@@ -85,12 +79,30 @@ func (cryptor *WechatCryptor) DecryptMsg(msgSign, timeStamp, nonce, postData str
         return "", &WechatCryptorError{Code: ParseXmlError}
     }
 
-    sign := SHA1(cryptor.token, timeStamp, nonce, postBody.Encrypt)
+    return cryptor.DecryptMsgContent(msgSign, timeStamp, nonce, postBody.Encrypt)
+}
+
+func (cryptor *WechatCryptor) EncryptMsgContent(msg, timeStamp, nonce string) (string, string, string, string, error) {
+    encrypt, err := cryptor.Encrypt(WechatCryptorRandomStr(), msg)
+    if nil != err {
+        return "", "", "", "", err
+    }
+
+    if 0 == len(timeStamp) {
+        timeStamp = string(time.Now().Unix())
+    }
+
+    sign := SHA1(cryptor.token, timeStamp, nonce, encrypt)
+    return encrypt, sign, timeStamp, nonce, nil
+}
+
+func (cryptor *WechatCryptor) DecryptMsgContent(msgSign, timeStamp, nonce, encrypt string) (string, error) {
+    sign := SHA1(cryptor.token, timeStamp, nonce, encrypt)
     if msgSign != sign {
         return "", &WechatCryptorError{Code: ValidateSignatureError}
     }
 
-    return cryptor.Decrypt(postBody.Encrypt)
+    return cryptor.Decrypt(encrypt)
 }
 
 // 对明文进行加密
