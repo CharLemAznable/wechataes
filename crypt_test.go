@@ -19,6 +19,10 @@ var nonce = "xxxxxx"
 
 func TestWechatCrypt(t *testing.T) {
     cryptor, _ := NewWechatCryptor(appId, token, encodingAesKey)
+    if "AppId(wxb11529c136998cb6) Token(pamtest) AES_KEY(abcdefghijklmnopqrstuvwxyz0123456789ABCDEFE=)" != cryptor.String() {
+        t.Error("no异常")
+    }
+
     encrypt, _ := cryptor.Encrypt(randomStr, replyMsg)
     if afterAesEncrypt != encrypt {
         t.Error("no异常")
@@ -55,6 +59,48 @@ func TestWechatCryptMsg(t *testing.T) {
 
     afterDecrpt, _ := cryptor.DecryptMsg(encryptMsg.MsgSignature, timestamp, nonce, fromXML)
     if replyMsg != afterDecrpt {
+        t.Error("no异常")
+    }
+}
+
+func TestError(t *testing.T) {
+    _, err := NewWechatCryptor(appId, token, "abcdefghijklmnopqrstuvwxyz0123456789ABCDEF")
+    if "SymmetricKey非法" != err.Error() {
+        t.Error("encodingAesKey异常")
+    }
+
+    err = &WechatCryptorError{Code: ValidateSignatureError}
+    if "签名验证错误" != err.Error() {
+        t.Error("no异常")
+    }
+
+    err = &WechatCryptorError{Code: ParseXmlError}
+    if "xml解析失败" != err.Error() {
+        t.Error("no异常")
+    }
+
+    err = &WechatCryptorError{Code: ComputeSignatureError}
+    if "sha加密生成签名失败" != err.Error() {
+        t.Error("no异常")
+    }
+
+    err = &WechatCryptorError{Code: ValidateAppidError}
+    if "appid校验失败" != err.Error() {
+        t.Error("no异常")
+    }
+
+    err = &WechatCryptorError{Code: EncryptAESError}
+    if "aes加密失败" != err.Error() {
+        t.Error("no异常")
+    }
+
+    err = &WechatCryptorError{Code: DecryptAESError}
+    if "aes解密失败" != err.Error() {
+        t.Error("no异常")
+    }
+
+    err = &WechatCryptorError{Code: IllegalBuffer}
+    if "解密后得到的buffer非法" != err.Error() {
         t.Error("no异常")
     }
 }
