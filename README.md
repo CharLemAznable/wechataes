@@ -1,6 +1,7 @@
 # Wechat AES
 
   [![Build Status](https://travis-ci.org/CharLemAznable/wechataes.svg?branch=master)](https://travis-ci.org/CharLemAznable/wechataes)
+  [![codecov](https://codecov.io/gh/CharLemAznable/wechataes/branch/master/graph/badge.svg)](https://codecov.io/gh/CharLemAznable/wechataes)
   [![GitHub version](https://badge.fury.io/gh/CharLemAznable%2Fwechataes.svg)](https://badge.fury.io/gh/CharLemAznable%2Fwechataes)
   [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
