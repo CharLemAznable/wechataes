@@ -3,6 +3,6 @@ go:
   - 1.11.x
   - master
 install: go get github.com/CharLemAznable/wechataes
-script: go test-coverprofile=coverage.txt -covermode=atomic
+script: go test -coverprofile=coverage.txt -covermode=atomic
 after_success:
   - bash <(curl -s https://codecov.io/bash)
