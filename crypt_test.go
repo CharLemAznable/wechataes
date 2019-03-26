@@ -53,7 +53,7 @@ func TestWechatCryptMsg(t *testing.T) {
     afterEncrpt, _ := cryptor.EncryptMsg(replyMsg, timestamp, nonce)
 
     encryptMsg := TestEncryptMsg{}
-    xml.Unmarshal([]byte(afterEncrpt), &encryptMsg)
+    _ = xml.Unmarshal([]byte(afterEncrpt), &encryptMsg)
     format := "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>"
     fromXML := fmt.Sprintf(format, encryptMsg.Encrypt)
 
