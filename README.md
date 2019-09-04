@@ -2,7 +2,7 @@
 
   [![Build Status](https://travis-ci.org/CharLemAznable/wechataes.svg?branch=master)](https://travis-ci.org/CharLemAznable/wechataes)
   [![codecov](https://codecov.io/gh/CharLemAznable/wechataes/branch/master/graph/badge.svg)](https://codecov.io/gh/CharLemAznable/wechataes)
-  [![GitHub version](https://badge.fury.io/gh/CharLemAznable%2Fwechataes.svg)](https://badge.fury.io/gh/CharLemAznable%2Fwechataes)
+  ![GitHub release (latest by date)](https://img.shields.io/github/v/release/CharLemAznable/wechataes)
   [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
   [![GoDoc](https://godoc.org/github.com/CharLemAznable/wechataes?status.svg)](https://godoc.org/github.com/CharLemAznable/wechataes)
   ![GitHub code size](https://img.shields.io/github/languages/code-size/CharLemAznable/wechataes)
