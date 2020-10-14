@@ -1,7 +1,6 @@
 language: go
 go:
-  - 1.11.x
-  - master
+  - 1.12.x
 install: go get github.com/CharLemAznable/wechataes
 script: go test -coverprofile=coverage.txt -covermode=atomic
 after_success:
